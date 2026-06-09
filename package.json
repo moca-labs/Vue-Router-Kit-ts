@@ -1,0 +1,52 @@
+{
+	"name": "@moca-labs/vue-router-kit-ts",
+	"version": "0.0.1",
+	"description": "TypeScript Vue Router Navigation Kit - 화면 전환 및 데이터 전달 관리",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc",
+		"prepublishOnly": "npm run build"
+	},
+	"keywords": [
+		"typescript",
+		"vue-router",
+		"vue",
+		"navigation",
+		"moca-labs"
+	],
+	"author": "IDEa Team",
+	"license": "Apache-2.0",
+	"peerDependencies": {
+		"@moca-labs/entity-kit-ts": "^0.2.0",
+		"vue": "^3.0.0",
+		"vue-router": "^4.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.14",
+		"@moca-labs/entity-kit-ts": "^0.2.0",
+		"@types/node": "^25.2.0",
+		"typescript": "^6.0.3",
+		"vue": "^3.5.0",
+		"vue-router": "^4.0.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/moca-labs/Vue-Router-Kit-ts.git"
+	}
+}

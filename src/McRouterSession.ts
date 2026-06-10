@@ -10,7 +10,10 @@ function key(navKey: string, field: string): string {
 
 export const McRouterSession = {
 	saveParam(navKey: string, param: McSerializable): void {
-		sessionStorage.setItem(key(navKey, "param"), JSON.stringify(param.toJson()));
+		sessionStorage.setItem(
+			key(navKey, "param"),
+			JSON.stringify(param.toJson()),
+		);
 	},
 
 	loadParam<T extends McSerializable>(
@@ -19,11 +22,19 @@ export const McRouterSession = {
 	): T | undefined {
 		const raw = sessionStorage.getItem(key(navKey, "param"));
 		if (!raw) return undefined;
-		return new type(JSON.parse(raw));
+		try {
+			return new type(JSON.parse(raw));
+		} catch {
+			sessionStorage.removeItem(key(navKey, "param"));
+			return undefined;
+		}
 	},
 
 	saveResult(navKey: string, result: McSerializable): void {
-		sessionStorage.setItem(key(navKey, "result"), JSON.stringify(result.toJson()));
+		sessionStorage.setItem(
+			key(navKey, "result"),
+			JSON.stringify(result.toJson()),
+		);
 	},
 
 	loadResult<T extends McSerializable>(
@@ -32,7 +43,12 @@ export const McRouterSession = {
 	): T | undefined {
 		const raw = sessionStorage.getItem(key(navKey, "result"));
 		if (!raw) return undefined;
-		return new type(JSON.parse(raw));
+		try {
+			return new type(JSON.parse(raw));
+		} catch {
+			sessionStorage.removeItem(key(navKey, "result"));
+			return undefined;
+		}
 	},
 
 	setStatus(navKey: string, status: RouterStatus): void {
@@ -52,7 +68,11 @@ export const McRouterSession = {
 		const suffix = ":launcher";
 		for (let i = 0; i < sessionStorage.length; i++) {
 			const k = sessionStorage.key(i);
-			if (k?.startsWith(prefix) && k.endsWith(suffix) && sessionStorage.getItem(k) === launcherKey) {
+			if (
+				k?.startsWith(prefix) &&
+				k.endsWith(suffix) &&
+				sessionStorage.getItem(k) === launcherKey
+			) {
 				return k.slice(prefix.length, k.length - suffix.length);
 			}
 		}

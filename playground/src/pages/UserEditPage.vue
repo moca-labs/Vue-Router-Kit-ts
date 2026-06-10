@@ -14,7 +14,8 @@
       </div>
     </div>
     <div v-else style="background:#fff3f3; padding:1rem; border-radius:6px; margin-bottom:1.5rem; font-size:13px">
-      파라미터 없음 — 직접 접근했거나 sessionStorage가 만료됨
+      
+      
       <button @click="onRefresh" style="margin-left:0.5rem; font-size:12px; padding:2px 8px">새로고침</button>
     </div>
 

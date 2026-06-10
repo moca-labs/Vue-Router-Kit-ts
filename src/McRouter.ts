@@ -184,17 +184,18 @@ export namespace McRouter {
 				return;
 			}
 
-			// 브라우저 뒤로가기: 스택 top이 현재 페이지와 다르면 이탈로 판단
+			// 브라우저 뒤로가기: newNavKey와 일치할 때까지 스택을 모두 pop (다단계 뒤로가기 대응)
 			const newNavKey = currentNavKey();
-			const top = McNavigationStack.top();
 
-			if (top && top.navKey !== newNavKey) {
+			let top = McNavigationStack.top();
+			while (top && top.navKey !== newNavKey) {
 				McNavigationStack.pop();
 				const status = McRouterSession.getStatus(top.navKey);
 				if (status === "pending") {
 					McRouterSession.setStatus(top.navKey, "rejected");
 					McRouterSession.removeParam(top.navKey);
 				}
+				top = McNavigationStack.top();
 			}
 			_navKey.value = newNavKey;
 		});

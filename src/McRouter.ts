@@ -12,6 +12,7 @@ let _pendingNav: "push" | "replace" | "back" | null = null;
 let _initialized = false;
 
 const _navKey = ref<string | undefined>(undefined);
+const _navType = ref<"push" | "replace" | "back" | "init">("init");
 
 function getRouter(): Router {
 	if (!_router) {
@@ -34,6 +35,7 @@ function currentNavKey(): string | undefined {
 
 export namespace McRouter {
 	export const navKey = readonly(_navKey);
+	export const navType = readonly(_navType);
 
 	export function push(name: string, param?: McSerializable): void {
 		_pushWithLauncher(name, param, undefined);
@@ -48,13 +50,21 @@ export namespace McRouter {
 			return;
 		}
 
-		// navKey는 유지 → launcher 연결 보존
-		const navKey = top.navKey;
-		McNavigationStack.replaceTop(name);
-		if (param) McRouterSession.saveParam(navKey, param);
+		const oldNavKey = top.navKey;
+		const newNavKey = nextKey();
+
+		// launcher 연결을 새 key로 이전
+		const launcherKey = McRouterSession.getLauncherKey(oldNavKey);
+		if (launcherKey) McRouterSession.saveLauncherKey(newNavKey, launcherKey);
+
+		McRouterSession.cleanup(oldNavKey);
+		McRouterSession.setStatus(newNavKey, "pending");
+		if (param) McRouterSession.saveParam(newNavKey, param);
+
+		McNavigationStack.replaceTopEntry({ navKey: newNavKey, route: name });
 
 		_pendingNav = "replace";
-		router.replace({ name, state: { [ROUTER_KEY]: navKey } });
+		router.replace({ name, state: { [ROUTER_KEY]: newNavKey } });
 	}
 
 	export function _pushWithLauncher(
@@ -175,12 +185,15 @@ export namespace McRouter {
 				} else {
 					_navKey.value = currentNavKey();
 				}
+				_navType.value = "init";
 				return;
 			}
 
 			if (_pendingNav !== null) {
+				const resolved = _pendingNav;
 				_pendingNav = null;
 				_navKey.value = currentNavKey();
+				_navType.value = resolved;
 				return;
 			}
 
@@ -197,6 +210,7 @@ export namespace McRouter {
 				}
 				top = McNavigationStack.top();
 			}
+			_navType.value = "back";
 			_navKey.value = newNavKey;
 		});
 

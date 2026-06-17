@@ -40,10 +40,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onActivated } from "vue";
+import { ref, onActivated, onMounted } from "vue";
 import { McRouter } from "@moca-labs/vue-router-kit-ts";
 import { PageBParam } from "../params/UserParam";
 import StackView from "../components/StackView.vue";
+import { onBeforeMount } from "vue";
 
 defineOptions({ name: "PageA" });
 
@@ -52,9 +53,18 @@ const memo = ref("");
 const pushCount = ref(0);
 let bParam = new PageBParam({ title: `PageA에서 보낸 메시지 #${pushCount.value}`, count: pushCount.value })
 
+
+onBeforeMount(() => {
+  console.log(`onBeforeMount > ${bParam.title} ${bParam.count}`);
+});
+
+onMounted(() => {
+  console.log(`onMounted > ${bParam.title} ${bParam.count}`);
+});
+
 onActivated(() => {
   activateCount.value++;
-  console.log(`${bParam.title} ${bParam.count}`);
+  console.log(`onActivated > ${bParam.title} ${bParam.count}`);
 });
 
 
@@ -63,7 +73,7 @@ function onPushB() {
   pushCount.value++;
   McRouter.push("PageB", bParam);
 }
-function onReplace() { McRouter.replace("PageB") }
+function onReplace() { McRouter.replace("PageB", bParam) }
 function onBack1() { McRouter.back(1) }
 function onBackHome() { McRouter.back("Home") }
 </script>

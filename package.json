@@ -1,6 +1,6 @@
 {
 	"name": "@moca-labs/vue-router-kit-ts",
-	"version": "0.0.4",
+	"version": "0.1.0",
 	"description": "TypeScript Vue Router Navigation Kit - 화면 전환 및 데이터 전달 관리",
 	"main": "dist/index.js",
 	"module": "dist/index.js",

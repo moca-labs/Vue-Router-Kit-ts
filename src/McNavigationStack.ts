@@ -40,10 +40,9 @@ export namespace McNavigationStack {
 		persist();
 	}
 
-	/** replace: navKey는 유지하고 route만 교체 */
-	export function replaceTop(route: string): void {
+	export function replaceTopEntry(entry: StackEntry): void {
 		if (_stack.length > 0) {
-			_stack[_stack.length - 1] = { ..._stack[_stack.length - 1], route };
+			_stack[_stack.length - 1] = entry;
 			persist();
 		}
 	}

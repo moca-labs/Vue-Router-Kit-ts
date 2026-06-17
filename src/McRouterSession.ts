@@ -63,6 +63,10 @@ export const McRouterSession = {
 		sessionStorage.setItem(key(navKey, "launcher"), launcherKey);
 	},
 
+	getLauncherKey(navKey: string): string | null {
+		return sessionStorage.getItem(key(navKey, "launcher"));
+	},
+
 	findNavKeyByLauncher(launcherKey: string): string | null {
 		const prefix = `${PREFIX}:`;
 		const suffix = ":launcher";

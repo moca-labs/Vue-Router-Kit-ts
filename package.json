@@ -1,6 +1,6 @@
 {
 	"name": "@moca-labs/vue-router-kit-ts",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "TypeScript Vue Router Navigation Kit - 화면 전환 및 데이터 전달 관리",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
@@ -29,13 +29,13 @@
 	"author": "IDEa Team",
 	"license": "Apache-2.0",
 	"peerDependencies": {
-		"@moca-labs/entity-kit-ts": "^0.2.0",
+		"@moca-labs/entity-kit-ts": ">=0.3.0",
 		"vue": "^3.5.0",
 		"vue-router": "^5.1.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.16",
-		"@moca-labs/entity-kit-ts": "^0.2.0",
+		"@moca-labs/entity-kit-ts": "^0.3.0",
 		"@types/node": "^25.9.2",
 		"typescript": "^6.0.3",
 		"vue": "^3.5.35",

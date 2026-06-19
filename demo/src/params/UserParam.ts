@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import McEntity, { McSerializable } from "@moca-labs/entity-kit-ts";
 
 @McEntity.ENTITY

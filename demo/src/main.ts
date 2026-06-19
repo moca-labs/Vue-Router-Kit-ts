@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { createApp } from "vue";
 import { McRouter } from "@moca-labs/vue-router-kit-ts";
 import router from "./router";

@@ -1,5 +1,5 @@
 {
-  "name": "vue-router-kit-playground",
+  "name": "vue-router-kit-demo",
   "private": true,
   "scripts": {
     "dev": "vite",

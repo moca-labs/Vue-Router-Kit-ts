@@ -9,6 +9,8 @@ Vue Router 기반 화면 전환 및 파라미터/결과 전달 관리 라이브�
 npm install @moca-labs/vue-router-kit-ts @moca-labs/entity-kit-ts vue-router
 ```
 
+> `reflect-metadata`는 필요하지 않습니다. TC39 Stage 3 데코레이터를 사용합니다.
+
 ---
 
 ## Import
@@ -176,26 +178,46 @@ type RouterStatus = "pending" | "resolved" | "rejected";
 
 ---
 
+## 내부 동작 — sessionStorage
+
+라이브러리는 화면 간 파라미터·결과·상태를 **`sessionStorage`**에 저장합니다.  
+브라우저 탭이 닫히면 자동으로 사라지며, 다른 탭과는 공유되지 않습니다.
+
+| 키 형식 | 저장 내용 |
+|---|---|
+| `mcrouter:stack` | 네비게이션 스택 전체 (새로고침 복원용) |
+| `mcrouter:{navKey}:param` | 이동 시 전달된 파라미터 (JSON) |
+| `mcrouter:{navKey}:result` | `resolve()` 로 반환된 결과 (JSON) |
+| `mcrouter:{navKey}:status` | `pending` / `resolved` / `rejected` |
+| `mcrouter:{navKey}:launcher` | 연결된 launcher 식별자 |
+
+`navKey`는 화면 전환마다 자동 생성(`mcr_0`, `mcr_1`, …)되며, 화면이 닫힐 때 해당 항목은 자동으로 정리됩니다.  
+새로고침 후에도 스택 및 파라미터가 복원되므로, 브라우저 새로고침 상황에서 정상 동작합니다.
+
+---
+
 ## 예제
 
 ```ts
-// UserParam.ts — 파라미터 Entity
-import "reflect-metadata";
-import McEntity from "@moca-labs/entity-kit-ts";
+// entities.ts — 파라미터 / 결과 Entity
+import McEntity, { McSerializable } from "@moca-labs/entity-kit-ts";
 
 @McEntity.ENTITY
-export class UserParam extends McEntity.Serializable {
-  @McEntity.FIELD(Number, "user_id")
-  @McEntity.SERIALIZE("user_id")
-  userId: number;
-}
+export class UserParam extends McSerializable {
+  constructor(_data: object = {}) { super(); }
 
-// UserResult.ts — 결과 Entity
-@McEntity.ENTITY
-export class UserResult extends McEntity.Serializable {
   @McEntity.FIELD(String)
   @McEntity.SERIALIZE
-  name: string;
+  userId: string = "";
+}
+
+@McEntity.ENTITY
+export class UserResult extends McSerializable {
+  constructor(_data: object = {}) { super(); }
+
+  @McEntity.FIELD(String)
+  @McEntity.SERIALIZE
+  name: string = "";
 }
 ```
 
@@ -215,7 +237,7 @@ const launcher = McLauncher("selectUser", UserResult, {
 });
 
 function openUserSelect() {
-  launcher.launch("UserSelect", new UserParam({ user_id: 1 }));
+  launcher.launch("UserSelect", new UserParam({ userId: "u001" }));
 }
 </script>
 ```
@@ -227,7 +249,7 @@ import { McRouter } from "@moca-labs/vue-router-kit-ts";
 import { UserParam, UserResult } from "./entities";
 
 const param = McRouter.params(UserParam);
-console.log(param?.userId); // 1
+console.log(param?.userId); // "u001"
 
 function confirm(name: string) {
   McRouter.resolve(new UserResult({ name }));

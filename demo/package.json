@@ -6,7 +6,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@moca-labs/entity-kit-ts": "^0.3.1",
+    "@moca-labs/entity-kit-ts": ">=0.5.1",
     "vue": "^3.5.0",
     "vue-router": "^4.0.0"
   },

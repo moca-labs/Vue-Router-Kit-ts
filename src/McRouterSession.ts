@@ -12,7 +12,7 @@ export const McRouterSession = {
 	saveParam(navKey: string, param: McSerializable): void {
 		sessionStorage.setItem(
 			key(navKey, "param"),
-			JSON.stringify(param.toJson()),
+			JSON.stringify(param.toRawJson()),
 		);
 	},
 
@@ -33,7 +33,7 @@ export const McRouterSession = {
 	saveResult(navKey: string, result: McSerializable): void {
 		sessionStorage.setItem(
 			key(navKey, "result"),
-			JSON.stringify(result.toJson()),
+			JSON.stringify(result.toRawJson()),
 		);
 	},
 

@@ -13,6 +13,27 @@ npm install @moca-labs/vue-router-kit-ts @moca-labs/entity-kit-ts vue-router
 
 ---
 
+## Vite 설정 — 데코레이터 lowering
+
+Vite 6+ 는 기본적으로 OXC 기반 변환을 사용하는데, 이 변환은 TC39 Stage 3 데코레이터를 브라우저 호환 코드로 내려주지(lowering) 않습니다. 그 결과 `@McEntity.ENTITY` 같은 데코레이터를 쓰는 코드가 번들에 그대로 남아 브라우저에서 `SyntaxError`가 발생할 수 있습니다.
+
+이 저장소의 데모(`demo/vite.config.ts`)는 esbuild가 데코레이터를 지원하지 않는 것으로 표시해 esbuild 경로가 데코레이터를 내려주도록 우회하는 방식으로 이 문제를 해결합니다.
+
+```ts
+// demo/vite.config.ts
+export default defineConfig({
+  plugins: [vue()],
+  esbuild: {
+    supported: { decorators: false },
+  },
+  // ...
+});
+```
+
+> `@moca-labs/entity-kit-ts`는 같은 문제를 다루는 `entityKitPlugin()`(`@moca-labs/entity-kit-ts/vite`)도 별도로 제공합니다. 다만 이 저장소 데모에서는 사용하지 않으며 동작이 검증되지 않았으므로 참고용으로만 언급합니다.
+
+---
+
 ## Import
 
 ```ts

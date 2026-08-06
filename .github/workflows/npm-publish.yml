@@ -18,6 +18,7 @@ jobs:
           node-version: 24
           registry-url: 'https://registry.npmjs.org/'
 
+      # npm ci: 재현성 고정 설치 (npm install 대비 lockfile 엄격 준수)
       - name: Install dependencies
         run: npm ci
         env:
@@ -26,6 +27,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      # --ignore-scripts: 공급망 공격 방어(설치 시 임의 스크립트 실행 차단).
+      # 위 Build 스텝이 dist를 이미 만들어 두므로 prepublishOnly가 무력화돼도 안전하다.
+      # 이 주석을 지우고 --ignore-scripts만 제거하지 말 것 — Build 스텝과 반드시 세트로 유지한다.
       - name: Publish to npm
         run: npm publish --access public --ignore-scripts
         env:
